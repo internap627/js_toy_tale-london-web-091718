@@ -3,7 +3,7 @@ const toyForm = document.querySelector('.container')
 const addToyForm = document.querySelector('.add-toy-form')
 let addToy = false
 
-// YOUR CODE HERE
+//
 let allToysG = []
 let toyCollection = document.querySelector('#toy-collection')
 
@@ -19,7 +19,7 @@ addBtn.addEventListener('click', () => {
 })
 
 
-// OR HERE!
+// 
 
 //API call
 function fetchIt(){
@@ -36,6 +36,7 @@ function fetchIt(){
 function showOne(toy){
   let card = document.createElement('div')
   card.className = 'card'
+  card.id = toy.id
   card.innerHTML = `
   <h2>${toy.name}</h2>
     <img src='${toy.image}' class="toy-avatar" />
@@ -43,6 +44,13 @@ function showOne(toy){
     <button class="like-btn">Like <3</button>
   `
   toyCollection.appendChild(card)
+  card.querySelector('button').addEventListener('click', () => {
+    toy.likes += 1
+    updateLikes(toy)
+    card.querySelector('p').innerText = `${toy.likes} Likes `
+  })
+
+
 }
 
 //Display all cards
@@ -75,6 +83,15 @@ function createNew(toy){
 }
 
 //Like function
-
+function updateLikes(toy){
+  fetch(`http://localhost:3000/toys/${toy.id}`, {
+    headers: {
+     'Accept': 'application/json',
+     'Content-Type': 'application/json'
+   },
+   method: "PATCH",
+   body: JSON.stringify(toy)
+  })
+}
 
 fetchIt()
